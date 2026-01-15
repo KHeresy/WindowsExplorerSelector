@@ -34,6 +34,7 @@ void QExplorerFinder::setTargetPath(const QString& path)
     if (m_targetPath.length() > 3 && m_targetPath.endsWith("\\")) {
         m_targetPath.chop(1);
     }
+    ui->editFolder->setText(m_targetPath);
 }
 
 void QExplorerFinder::on_pushButton_clicked()
@@ -51,7 +52,30 @@ void QExplorerFinder::on_pushButton_clicked()
     QDir dir(m_targetPath);
     QStringList files = dir.entryList(QStringList() << searchPattern, QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
     
+    ui->listWidget->clear();
+    ui->listWidget->addItems(files);
+}
+
+void QExplorerFinder::on_buttonSelected_clicked()
+{
+    QStringList files;
+    for(int i = 0; i < ui->listWidget->count(); ++i)
+    {
+        files << ui->listWidget->item(i)->text();
+    }
     selectFiles(files);
+}
+
+void QExplorerFinder::on_lineEdit_returnPressed()
+{
+    on_pushButton_clicked();
+}
+
+void QExplorerFinder::on_listWidget_itemClicked(QListWidgetItem *item)
+{
+    if (item) {
+        selectFiles(QStringList() << item->text());
+    }
 }
 
 // Helper to get Folder Object from WebBrowser

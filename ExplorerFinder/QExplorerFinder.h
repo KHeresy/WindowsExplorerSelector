@@ -19,6 +19,9 @@ public:
 
 private slots:
     void on_pushButton_clicked();
+    void on_buttonSelected_clicked();
+    void on_lineEdit_returnPressed();
+    void on_listWidget_itemClicked(QListWidgetItem *item);
 
 private:
     Ui::QExplorerFinderClass *ui;
