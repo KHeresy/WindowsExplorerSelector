@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="ExplorerFinder/ExplorerFinder.vcxproj" Id="1869da82-78b6-45b1-ba17-be4225084184">
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="ExplorerPlugin/ExplorerPlugin.vcxproj" Id="fd21342b-595b-46d4-9d81-4fc0e144d28d" />
+</Solution>
