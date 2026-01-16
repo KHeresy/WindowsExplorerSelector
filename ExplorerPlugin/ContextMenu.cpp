@@ -3,6 +3,7 @@
 #include "resource.h"
 #include <shellapi.h>
 #include <vector>
+#include <string>
 
 extern HINSTANCE g_hInst;
 extern long g_cDllRef;
@@ -35,6 +36,30 @@ HBITMAP IconToBitmapPARGB32(HICON hIcon) {
         memset(pBits, 0, bm.bmWidth * bm.bmHeight * 4);
         
         DrawIconEx(hMemDC, 0, 0, hIcon, bm.bmWidth, bm.bmHeight, 0, NULL, DI_NORMAL);
+        
+        // Fix Alpha using Mask
+        HDC hMaskDC = CreateCompatibleDC(hDC);
+        HBITMAP hOldMask = (HBITMAP)SelectObject(hMaskDC, ii.hbmMask);
+        
+        DWORD* pPixels = (DWORD*)pBits;
+        for (int y = 0; y < bm.bmHeight; y++) {
+            for (int x = 0; x < bm.bmWidth; x++) {
+                // Check Mask (0=Opaque, 1=Transparent)
+                // GetPixel returns non-zero for white (1), zero for black (0)
+                COLORREF maskColor = GetPixel(hMaskDC, x, y);
+                if (maskColor == 0) { // Opaque
+                    DWORD& pixel = pPixels[y * bm.bmWidth + x];
+                    // If alpha is 0, force it to 255 (Opaque)
+                    if ((pixel & 0xFF000000) == 0) {
+                        pixel |= 0xFF000000;
+                    }
+                }
+            }
+        }
+        
+        SelectObject(hMaskDC, hOldMask);
+        DeleteDC(hMaskDC);
+
         SelectObject(hMemDC, hOldBmp);
         DeleteDC(hMemDC);
     }
@@ -184,6 +209,29 @@ IFACEMETHODIMP CContextMenu::InvokeCommand(LPCMINVOKECOMMANDINFO pici)
 
     if (LOWORD(pici->lpVerb) == 0)
     {
+        // 1. Convert path to UTF-8
+        int size_needed = WideCharToMultiByte(CP_UTF8, 0, m_szSelectedFolder.c_str(), -1, NULL, 0, NULL, NULL);
+        std::string strPath(size_needed, 0);
+        WideCharToMultiByte(CP_UTF8, 0, m_szSelectedFolder.c_str(), -1, &strPath[0], size_needed, NULL, NULL);
+        // Remove null terminator if present at end for cleaner raw byte send
+        if (strPath.length() > 0 && strPath.back() == '\0') {
+            strPath.pop_back();
+        }
+
+        // 2. Try to connect to existing server via Named Pipe
+        // QLocalServer uses "\\.\pipe\" + serverName
+        const wchar_t* pipeName = L"\\\\.\\pipe\\ExplorerFinderServer";
+        
+        HANDLE hPipe = CreateFileW(pipeName, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+        if (hPipe != INVALID_HANDLE_VALUE) {
+            DWORD written;
+            // Write payload
+            WriteFile(hPipe, strPath.c_str(), (DWORD)strPath.length(), &written, NULL);
+            CloseHandle(hPipe);
+            return S_OK;
+        }
+
+        // 3. Fallback: Start Process
         // Get the DLL path to find the EXE
         wchar_t szDllPath[MAX_PATH];
         GetModuleFileNameW(g_hInst, szDllPath, MAX_PATH);
