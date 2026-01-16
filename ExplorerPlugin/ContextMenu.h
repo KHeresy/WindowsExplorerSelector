@@ -23,4 +23,5 @@ public:
 private:
     long m_cRef;
     std::wstring m_szSelectedFolder;
+    HBITMAP m_hMenuBitmap = NULL;
 };

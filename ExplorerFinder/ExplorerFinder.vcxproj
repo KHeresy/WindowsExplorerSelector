@@ -92,6 +92,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ResourceCompile Include="ExplorerFinder.rc" />
+  </ItemGroup>
+  <ItemGroup>
     <QtRcc Include="QExplorerFinder.qrc" />
     <QtUic Include="QExplorerFinder.ui" />
     <QtMoc Include="QExplorerFinder.h" />

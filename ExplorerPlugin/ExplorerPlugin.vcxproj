@@ -157,6 +157,9 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="ExplorerPlugin.rc" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="ClassFactory.cpp" />
     <ClCompile Include="ContextMenu.cpp" />
     <ClCompile Include="dllmain.cpp" />

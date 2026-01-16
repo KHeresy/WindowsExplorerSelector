@@ -1,9 +1,49 @@
 #include "pch.h"
 #include "ContextMenu.h"
+#include "resource.h"
 #include <shellapi.h>
+#include <vector>
 
 extern HINSTANCE g_hInst;
 extern long g_cDllRef;
+
+HBITMAP IconToBitmapPARGB32(HICON hIcon) {
+    if (!hIcon) return NULL;
+    ICONINFO ii = {0};
+    if (!GetIconInfo(hIcon, &ii)) return NULL;
+    
+    BITMAP bm;
+    GetObject(ii.hbmColor, sizeof(bm), &bm);
+    
+    BITMAPINFO bi = {0};
+    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bi.bmiHeader.biWidth = bm.bmWidth;
+    bi.bmiHeader.biHeight = -bm.bmHeight; // Negative for top-down
+    bi.bmiHeader.biPlanes = 1;
+    bi.bmiHeader.biBitCount = 32;
+    bi.bmiHeader.biCompression = BI_RGB;
+    
+    HDC hDC = GetDC(NULL);
+    void* pBits = NULL;
+    HBITMAP hBitmap = CreateDIBSection(hDC, &bi, DIB_RGB_COLORS, &pBits, NULL, 0);
+    
+    if (hBitmap) {
+        HDC hMemDC = CreateCompatibleDC(hDC);
+        HBITMAP hOldBmp = (HBITMAP)SelectObject(hMemDC, hBitmap);
+        
+        // Initialize alpha channel to 0
+        memset(pBits, 0, bm.bmWidth * bm.bmHeight * 4);
+        
+        DrawIconEx(hMemDC, 0, 0, hIcon, bm.bmWidth, bm.bmHeight, 0, NULL, DI_NORMAL);
+        SelectObject(hMemDC, hOldBmp);
+        DeleteDC(hMemDC);
+    }
+    
+    ReleaseDC(NULL, hDC);
+    DeleteObject(ii.hbmColor);
+    DeleteObject(ii.hbmMask);
+    return hBitmap;
+}
 
 CContextMenu::CContextMenu() : m_cRef(1)
 {
@@ -12,6 +52,7 @@ CContextMenu::CContextMenu() : m_cRef(1)
 
 CContextMenu::~CContextMenu()
 {
+    if (m_hMenuBitmap) DeleteObject(m_hMenuBitmap);
     InterlockedDecrement(&g_cDllRef);
 }
 
@@ -94,7 +135,37 @@ IFACEMETHODIMP CContextMenu::QueryContextMenu(HMENU hMenu, UINT indexMenu, UINT 
         return MAKE_HRESULT(SEVERITY_SUCCESS, 0, 0);
     }
 
-    InsertMenuW(hMenu, indexMenu, MF_STRING | MF_BYPOSITION, idCmdFirst, L"尋找檔案");
+    // Load Icon
+    HICON hIcon = (HICON)LoadImageW(g_hInst, MAKEINTRESOURCEW(IDI_ICON1), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+    HBITMAP hBitmap = NULL;
+    if (hIcon) {
+        hBitmap = IconToBitmapPARGB32(hIcon);
+        DestroyIcon(hIcon);
+    }
+
+    MENUITEMINFOW mii = { sizeof(mii) };
+    mii.fMask = MIIM_STRING | MIIM_ID | MIIM_BITMAP;
+    mii.wID = idCmdFirst;
+    mii.dwTypeData = const_cast<LPWSTR>(L"尋找檔案");
+    mii.hbmpItem = hBitmap; // If NULL, just no icon
+
+    InsertMenuItemW(hMenu, indexMenu, TRUE, &mii);
+    // Note: We leak hBitmap here if we don't delete it?
+    // Windows Menu takes ownership of the bitmap if we set HBMMENU_SYSTEM? No.
+    // For MIIM_BITMAP, "The HBITMAP that is displayed".
+    // "The application must destroy the bitmap when it is no longer needed."
+    // However, destroying it while the menu is shown will remove it.
+    // Standard IContextMenu practice: The menu destroys the bitmap? No.
+    // But since this is a Shell Extension, the menu lifespan is short.
+    // Actually, usually we should store it in member variable and destroy in destructor or reset.
+    // But for a simple example, let's see. If we leak 1 small bitmap per click, it's not great.
+    // But ContextMenu object is created per click and destroyed after InvokeCommand?
+    // No, IContextMenu is instantiated, QueryContextMenu called, then InvokeCommand (maybe), then Release.
+    // So we can store hBitmap in the class and delete in destructor.
+    
+    // Storing in member to clean up later
+    if (hBitmap) m_hMenuBitmap = hBitmap;
+
     return MAKE_HRESULT(SEVERITY_SUCCESS, 0, 1);
 }
 

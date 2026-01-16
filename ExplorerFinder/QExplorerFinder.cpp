@@ -21,6 +21,8 @@ QExplorerFinder::QExplorerFinder(QWidget *parent)
     ui->setupUi(this);
     ui->listResults->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
+    setWindowIcon(QIcon(":/QExplorerFinder/app_icon.png"));
+
     QSettings settings("ExplorerFinder", "ExplorerFinder");
     ui->chkCloseAfterSelect->setChecked(settings.value("CloseAfterSelect", false).toBool());
     ui->chkAlwaysOnTop->setChecked(settings.value("AlwaysOnTop", false).toBool());
