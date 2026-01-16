@@ -168,11 +168,17 @@ IFACEMETHODIMP CContextMenu::QueryContextMenu(HMENU hMenu, UINT indexMenu, UINT 
         DestroyIcon(hIcon);
     }
 
+    // Load Menu Text from resources
+    wchar_t szMenuText[128];
+    if (0 == LoadStringW(g_hInst, IDS_MENU_TEXT, szMenuText, ARRAYSIZE(szMenuText))) {
+        wcscpy_s(szMenuText, L"Find Files"); // Fallback
+    }
+
     MENUITEMINFOW mii = { sizeof(mii) };
     mii.fMask = MIIM_STRING | MIIM_ID | MIIM_BITMAP;
     mii.wID = idCmdFirst;
-    mii.dwTypeData = const_cast<LPWSTR>(L"尋找檔案");
-    mii.hbmpItem = hBitmap; // If NULL, just no icon
+    mii.dwTypeData = szMenuText;
+    mii.hbmpItem = hBitmap; 
 
     InsertMenuItemW(hMenu, indexMenu, TRUE, &mii);
     // Note: We leak hBitmap here if we don't delete it?

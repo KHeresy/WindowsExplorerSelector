@@ -1,3 +1,20 @@
 #include "resource.h"
+#include "winres.h"
 
+// Icon
 IDI_ICON1 ICON "app_icon.ico"
+
+// String Table
+// English (U.S.)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+STRINGTABLE
+BEGIN
+    IDS_MENU_TEXT "Find Files"
+END
+
+// Chinese (Traditional, Taiwan)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_TRADITIONAL
+STRINGTABLE
+BEGIN
+    IDS_MENU_TEXT "尋找檔案"
+END

@@ -1,1 +1,2 @@
 #define IDI_ICON1 101
+#define IDS_MENU_TEXT 102
