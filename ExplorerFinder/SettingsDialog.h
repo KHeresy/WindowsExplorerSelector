@@ -16,6 +16,9 @@ public:
     
     void accept() override;
 
+private slots:
+    void on_btnClearHistory_clicked();
+
 private:
     Ui::SettingsDialog *ui;
 };

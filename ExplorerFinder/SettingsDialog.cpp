@@ -35,6 +35,10 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     // Load AutoStart
     bool autoStart = settings.value("AutoStart", false).toBool();
     ui->chkAutoStart->setChecked(autoStart);
+
+    // Load History Size
+    int historySize = settings.value("HistorySize", 10).toInt();
+    ui->sbHistorySize->setValue(historySize);
 }
 
 SettingsDialog::~SettingsDialog()
@@ -51,10 +55,13 @@ void SettingsDialog::accept()
     
     QString oldLang = settings.value("Language", "").toString();
     QString newLang = ui->cmbLanguage->currentData().toString();
+    
+    int newHistorySize = ui->sbHistorySize->value();
 
     settings.setValue("GlobalHotkey", newHotkey);
     settings.setValue("AutoStart", newAutoStart);
     settings.setValue("Language", newLang);
+    settings.setValue("HistorySize", newHistorySize);
 
     if (oldLang != newLang) {
         QMessageBox::information(this, tr("Language Changed"), tr("Please restart the application for the language change to take effect."));
@@ -63,6 +70,13 @@ void SettingsDialog::accept()
     applyAutoStart(newAutoStart);
 
     QDialog::accept();
+}
+
+void SettingsDialog::on_btnClearHistory_clicked()
+{
+    QSettings settings("ExplorerFinder", "ExplorerFinder");
+    settings.remove("SearchHistory");
+    QMessageBox::information(this, tr("History Cleared"), tr("Search history has been cleared."));
 }
 
 void SettingsDialog::applyAutoStart(bool enable)

@@ -41,5 +41,7 @@ private:
     
     void selectFiles(const QStringList& files);
     void updateStatusLabel();
+    void loadHistory();
+    void saveHistory(const QString& text);
 };
 

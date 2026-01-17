@@ -28,6 +28,9 @@ QExplorerFinder::QExplorerFinder(QWidget *parent)
     ui->chkCloseAfterSelect->setChecked(settings.value("CloseAfterSelect", false).toBool());
     ui->chkAlwaysOnTop->setChecked(settings.value("AlwaysOnTop", false).toBool());
     ui->chkDefaultSelectAll->setChecked(settings.value("DefaultSelectAll", false).toBool());
+
+    connect(ui->lineEditSearch->lineEdit(), &QLineEdit::returnPressed, this, &QExplorerFinder::on_lineEditSearch_returnPressed);
+    loadHistory();
 }
 
 QExplorerFinder::~QExplorerFinder()
@@ -56,8 +59,10 @@ void QExplorerFinder::on_btnSearch_clicked()
 {
     if (m_targetPath.isEmpty()) return;
 
-    QString searchPattern = ui->lineEditSearch->text();
+    QString searchPattern = ui->lineEditSearch->currentText();
     if (searchPattern.isEmpty()) return;
+
+    saveHistory(searchPattern);
 
     // Support wildcards if user provided, otherwise *pattern*
     if (!searchPattern.contains("*") && !searchPattern.contains("?")) {
@@ -289,4 +294,39 @@ void QExplorerFinder::keyPressEvent(QKeyEvent *event)
     } else {
         QWidget::keyPressEvent(event);
     }
+}
+
+void QExplorerFinder::loadHistory()
+{
+    QSettings settings("ExplorerFinder", "ExplorerFinder");
+    QStringList history = settings.value("SearchHistory").toStringList();
+    ui->lineEditSearch->clear();
+    ui->lineEditSearch->addItems(history);
+    ui->lineEditSearch->setCurrentIndex(-1);
+}
+
+void QExplorerFinder::saveHistory(const QString& text)
+{
+    QSettings settings("ExplorerFinder", "ExplorerFinder");
+    QStringList history = settings.value("SearchHistory").toStringList();
+    int maxHistory = settings.value("HistorySize", 10).toInt();
+
+    history.removeAll(text); // Remove duplicates
+    history.prepend(text);   // Add to top
+
+    while (history.size() > maxHistory) {
+        history.removeLast();
+    }
+
+    settings.setValue("SearchHistory", history);
+    
+    // Update UI without resetting current text if possible, or just re-load
+    // Simplest is to block signals and reload, but that might mess with typing?
+    // Actually, we usually search *after* typing.
+    // Let's just update the list.
+    ui->lineEditSearch->blockSignals(true);
+    ui->lineEditSearch->clear();
+    ui->lineEditSearch->addItems(history);
+    ui->lineEditSearch->setEditText(text);
+    ui->lineEditSearch->blockSignals(false);
 }
