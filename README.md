@@ -36,7 +36,7 @@
 
 ## 專案結構
 
-*   **ExplorerPlugin** (DLL): Windows Shell Extension，負責右鍵選單邏輯 (支援 IContextMenu 與 IExplorerCommand)。
+*   **SelectorExplorerPlugin** (DLL): Windows Shell Extension，負責右鍵選單邏輯 (支援 IContextMenu 與 IExplorerCommand)。
 *   **ExplorerSelector** (EXE): Qt 6 應用程式，負責搜尋介面、全域快速鍵與檔案總管控制。
 *   **AppxManifest.xml** / **Install.ps1**: 用於 Windows 11 Sparse Package 註冊的設定與腳本。
 
@@ -59,13 +59,13 @@
     此腳本會將執行檔、DLL、Qt 依賴庫以及安裝腳本整理至專案根目錄下的 `App` 資料夾。
 
 2.  **安裝 (Windows 11 Modern Context Menu)**：
-    進入 `App` 資料夾，以**系統管理員身分**執行 `Install.ps1`：
+    進入 `App` 資料夾，以**系統管理員身分**執行 `Install.ps1` :
     ```powershell
     cd App
     .\Install.ps1
     ```
     此腳本會：
-    *   註冊 COM 元件 (ExplorerPlugin.dll)。
+    *   註冊 COM 元件 (SelectorExplorerPlugin.dll)。
     *   建立並信任開發用憑證。
     *   註冊 Sparse Package 以啟用 Windows 11 第一層右鍵選單。
 
@@ -82,7 +82,7 @@
 1.  **註冊右鍵選單**：
     以**系統管理員身分**執行：
     ```powershell
-    regsvr32 "ExplorerPlugin.dll"
+    regsvr32 "SelectorExplorerPlugin.dll"
     ```
 2.  **執行主程式**：
     執行 `ExplorerSelector.exe` 後，會在系統匣看到圖示。

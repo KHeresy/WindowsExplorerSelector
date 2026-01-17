@@ -14,14 +14,14 @@ Write-Host "Created App directory." -ForegroundColor Cyan
 # Note: Path still assumes folder structure.
 # But binary name is ExplorerSelector.exe
 $exePath = Join-Path $solutionDir "ExplorerSelector\x64\Release\ExplorerSelector.exe"
-$dllPath = Join-Path $solutionDir "ExplorerPlugin\x64\Release\ExplorerPlugin.dll"
+$dllPath = Join-Path $solutionDir "SelectorExplorerPlugin\x64\Release\SelectorExplorerPlugin.dll"
 
 if (-not (Test-Path $exePath)) {
     Write-Warning "Release build of ExplorerSelector.exe not found. Please build Release configuration first."
     Exit
 }
 if (-not (Test-Path $dllPath)) {
-    Write-Warning "Release build of ExplorerPlugin.dll not found. Please build Release configuration first."
+    Write-Warning "Release build of SelectorExplorerPlugin.dll not found. Please build Release configuration first."
     Exit
 }
 
@@ -51,7 +51,7 @@ $manifestContent = Get-Content $manifestSrc -Raw
 
 # Update paths: Remove "ExplorerSelector\x64\Debug\" prefix (if any)
 $manifestContent = $manifestContent -replace 'Executable=".*\\ExplorerSelector.exe"', 'Executable="ExplorerSelector.exe"'
-$manifestContent = $manifestContent -replace 'Path=".*\\ExplorerPlugin.dll"', 'Path="ExplorerPlugin.dll"'
+$manifestContent = $manifestContent -replace 'Path=".*\\SelectorExplorerPlugin.dll"', 'Path="SelectorExplorerPlugin.dll"'
 
 Set-Content $manifestDst $manifestContent
 Write-Host "Updated AppxManifest.xml." -ForegroundColor Green
@@ -62,7 +62,7 @@ $installDst = Join-Path $appDir "Install.ps1"
 $installContent = Get-Content $installSrc -Raw
 
 # Update DLL path logic to be relative to script
-$installContent = $installContent -replace 'Join-Path \$projectRoot "ExplorerPlugin\\x64\\Debug\\ExplorerPlugin.dll"', 'Join-Path $projectRoot "ExplorerPlugin.dll"'
+$installContent = $installContent -replace 'Join-Path \$projectRoot "SelectorExplorerPlugin\\x64\\Debug\\SelectorExplorerPlugin.dll"', 'Join-Path $projectRoot "SelectorExplorerPlugin.dll"'
 
 Set-Content $installDst $installContent
 Write-Host "Updated Install.ps1." -ForegroundColor Green
@@ -73,7 +73,7 @@ $uninstallDst = Join-Path $appDir "Uninstall.ps1"
 $uninstallContent = Get-Content $uninstallSrc -Raw
 
 # Update DLL path logic
-$uninstallContent = $uninstallContent -replace '"\$PSScriptRoot\\ExplorerPlugin\\x64\\Debug\\ExplorerPlugin.dll"', '"$PSScriptRoot\ExplorerPlugin.dll"'
+$uninstallContent = $uninstallContent -replace '"\$PSScriptRoot\\SelectorExplorerPlugin\\x64\\Debug\\SelectorExplorerPlugin.dll"', '"$PSScriptRoot\SelectorExplorerPlugin.dll"'
 
 Set-Content $uninstallDst $uninstallContent
 Write-Host "Updated Uninstall.ps1." -ForegroundColor Green

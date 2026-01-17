@@ -26,9 +26,9 @@ BEGIN
             VALUE "CompanyName", "Heresy"
             VALUE "FileDescription", "Explorer Selector Shell Extension"
             VALUE "FileVersion", "0.1.0.0"
-            VALUE "InternalName", "ExplorerPlugin.dll"
+            VALUE "InternalName", "SelectorExplorerPlugin.dll"
             VALUE "LegalCopyright", "Copyright (C) 2026"
-            VALUE "OriginalFilename", "ExplorerPlugin.dll"
+            VALUE "OriginalFilename", "SelectorExplorerPlugin.dll"
             VALUE "ProductName", "Explorer Selector"
             VALUE "ProductVersion", "0.1.0.0"
         END

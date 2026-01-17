@@ -7,7 +7,7 @@ Write-Host "Removing ExplorerSelector Package..." -ForegroundColor Cyan
 Get-AppxPackage *ExplorerSelector* | Remove-AppxPackage
 
 Write-Host "Unregistering DLL..." -ForegroundColor Cyan
-$dllPath = "$PSScriptRoot\ExplorerPlugin\x64\Debug\ExplorerPlugin.dll"
+$dllPath = "$PSScriptRoot\SelectorExplorerPlugin\x64\Debug\SelectorExplorerPlugin.dll"
 if (Test-Path $dllPath) {
     Start-Process "regsvr32.exe" -ArgumentList "/u /s `"$dllPath`"" -Wait
 }

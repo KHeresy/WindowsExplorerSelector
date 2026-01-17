@@ -7,7 +7,7 @@ $projectRoot = $scriptPath
 
 # 1. Register the DLL (Standard COM Registration)
 Write-Host "Registering DLL..." -ForegroundColor Cyan
-$dllPath = Join-Path $projectRoot "ExplorerPlugin\x64\Debug\ExplorerPlugin.dll"
+$dllPath = Join-Path $projectRoot "SelectorExplorerPlugin\x64\Debug\SelectorExplorerPlugin.dll"
 if (Test-Path $dllPath) {
     Start-Process "regsvr32.exe" -ArgumentList "/s `"$dllPath`"" -Wait
     Write-Host "DLL Registered." -ForegroundColor Green

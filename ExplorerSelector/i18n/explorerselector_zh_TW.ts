@@ -22,48 +22,48 @@
         <translation type="vanished">Explorer Finder</translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.ui" line="25"/>
+        <location filename="../QExplorerFinder.ui" line="26"/>
         <source>Folder</source>
         <translation>資料夾</translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.ui" line="44"/>
-        <location filename="../QExplorerFinder.ui" line="57"/>
+        <location filename="../QExplorerFinder.ui" line="45"/>
+        <location filename="../QExplorerFinder.ui" line="58"/>
         <source>Search</source>
         <translation>搜尋</translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.ui" line="81"/>
+        <location filename="../QExplorerFinder.ui" line="82"/>
         <source>Found: 0 | Selected: 0</source>
         <translation>找到: 0 | 已選: 0</translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.ui" line="108"/>
+        <location filename="../QExplorerFinder.ui" line="109"/>
         <source>Select All</source>
         <translation>全選</translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.ui" line="115"/>
+        <location filename="../QExplorerFinder.ui" line="116"/>
         <source>Invert</source>
         <translation>反向選取</translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.ui" line="122"/>
+        <location filename="../QExplorerFinder.ui" line="123"/>
         <source>None</source>
         <translation>取消全選</translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.ui" line="133"/>
+        <location filename="../QExplorerFinder.ui" line="134"/>
         <source>Close after selection</source>
         <translation>選取後關閉</translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.ui" line="140"/>
+        <location filename="../QExplorerFinder.ui" line="141"/>
         <source>Always on top</source>
         <translation>永遠在最上方</translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.ui" line="101"/>
+        <location filename="../QExplorerFinder.ui" line="102"/>
         <source>Default Select All</source>
         <translation>預設全選</translation>
     </message>
@@ -73,12 +73,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.ui" line="19"/>
+        <location filename="../QExplorerFinder.ui" line="20"/>
         <source>Debug</source>
         <translation>除錯</translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.ui" line="160"/>
+        <location filename="../QExplorerFinder.ui" line="161"/>
         <source>Select in Explorer</source>
         <translation>在檔案總管中選取</translation>
     </message>
