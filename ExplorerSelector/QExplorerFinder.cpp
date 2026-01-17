@@ -74,6 +74,7 @@ void QExplorerFinder::on_btnSearch_clicked()
     if (!searchPattern.contains("*") && !searchPattern.contains("?")) {
         searchPattern = "*" + searchPattern + "*";
     }
+    searchPattern.replace("[", "[[]");
 
     ui->lblStatus->setText(tr("Searching..."));
     
