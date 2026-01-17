@@ -4,13 +4,13 @@
 <context>
     <name>QExplorerFinder</name>
     <message>
-        <location filename="../QExplorerFinder.cpp" line="73"/>
-        <location filename="../QExplorerFinder.cpp" line="76"/>
+        <location filename="../QExplorerFinder.cpp" line="78"/>
+        <location filename="../QExplorerFinder.cpp" line="81"/>
         <source>Searching...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../QExplorerFinder.cpp" line="181"/>
+        <location filename="../QExplorerFinder.cpp" line="186"/>
         <source>Found: %1 | Selected: %2</source>
         <translation>找到: %1 | 已選: %2</translation>
     </message>

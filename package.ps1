@@ -13,8 +13,8 @@ Write-Host "Created App directory." -ForegroundColor Cyan
 # 2. Check for Release Binaries
 # Note: Path still assumes folder structure.
 # But binary name is ExplorerSelector.exe
-$exePath = Join-Path $solutionDir "ExplorerSelector\x64\Release\ExplorerSelector.exe"
-$dllPath = Join-Path $solutionDir "SelectorExplorerPlugin\x64\Release\SelectorExplorerPlugin.dll"
+$exePath = Join-Path $solutionDir "x64\Release\ExplorerSelector.exe"
+$dllPath = Join-Path $solutionDir "x64\Release\SelectorExplorerPlugin.dll"
 
 if (-not (Test-Path $exePath)) {
     Write-Warning "Release build of ExplorerSelector.exe not found. Please build Release configuration first."

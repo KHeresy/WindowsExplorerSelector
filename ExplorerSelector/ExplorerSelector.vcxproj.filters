@@ -45,7 +45,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ExplorerFinder.rc">
+    <ResourceCompile Include="ExplorerSelector.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -60,7 +60,7 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <QtTranslation Include="i18n\explorerfinder_zh_TW.ts">
+    <QtTranslation Include="i18n\explorerselector_zh_TW.ts">
       <Filter>Translation Files</Filter>
     </QtTranslation>
   </ItemGroup>

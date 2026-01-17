@@ -3,6 +3,6 @@
         <file>app_icon.png</file>
     </qresource>
     <qresource prefix="/">
-        <file>i18n/explorerfinder_zh_TW.qm</file>
+        <file>i18n/explorerselector_zh_TW.qm</file>
     </qresource>
 </RCC>

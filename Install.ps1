@@ -7,7 +7,7 @@ $projectRoot = $scriptPath
 
 # 1. Register the DLL (Standard COM Registration)
 Write-Host "Registering DLL..." -ForegroundColor Cyan
-$dllPath = Join-Path $projectRoot "SelectorExplorerPlugin\x64\Debug\SelectorExplorerPlugin.dll"
+$dllPath = Join-Path $projectRoot "SelectorExplorerPlugin.dll"
 if (Test-Path $dllPath) {
     Start-Process "regsvr32.exe" -ArgumentList "/s `"$dllPath`"" -Wait
     Write-Host "DLL Registered." -ForegroundColor Green
@@ -16,14 +16,14 @@ if (Test-Path $dllPath) {
 }
 
 # 2. Setup Certificate for Sparse Package
-$certName = "ExplorerSelectorDev"
+$certName = "ExplorerFinderDev"
 $certSubject = "CN=$certName"
 Write-Host "Checking for certificate..." -ForegroundColor Cyan
 
 $cert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Subject -eq $certSubject }
 if (-not $cert) {
     Write-Host "Creating Self-Signed Certificate..." -ForegroundColor Yellow
-    $cert = New-SelfSignedCertificate -Type Custom -Subject $certSubject -KeyUsage DigitalSignature -FriendlyName "ExplorerSelector Dev Cert" -CertStoreLocation "Cert:\LocalMachine\My" -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
+    $cert = New-SelfSignedCertificate -Type Custom -Subject $certSubject -KeyUsage DigitalSignature -FriendlyName "ExplorerFinder Dev Cert" -CertStoreLocation "Cert:\LocalMachine\My" -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
 }
 
 # Trust the certificate
@@ -46,3 +46,4 @@ if (Test-Path $manifestPath) {
 } else {
     Write-Error "AppxManifest.xml not found at $manifestPath"
 }
+
