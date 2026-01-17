@@ -31,6 +31,7 @@ private slots:
     void on_btnListNone_clicked();
     
     void on_chkAlwaysOnTop_stateChanged(int state);
+    void onCheckExplorerWindow();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -38,6 +39,7 @@ protected:
 private:
     Ui::QExplorerFinderClass *ui;
     QString m_targetPath;
+    QTimer* m_checkTimer;
     
     void selectFiles(const QStringList& files);
     void updateStatusLabel();

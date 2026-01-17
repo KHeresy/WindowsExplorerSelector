@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <QKeyEvent>
+#include <QTimer>
 #include <windows.h>
 #include <shlobj.h>
 #include <shlwapi.h>
@@ -32,6 +33,10 @@ QExplorerFinder::QExplorerFinder(QWidget *parent)
 
     connect(ui->lineEditSearch->lineEdit(), &QLineEdit::returnPressed, this, &QExplorerFinder::on_lineEditSearch_returnPressed);
     loadHistory();
+
+    m_checkTimer = new QTimer(this);
+    connect(m_checkTimer, &QTimer::timeout, this, &QExplorerFinder::onCheckExplorerWindow);
+    m_checkTimer->start(1000);
 }
 
 QExplorerFinder::~QExplorerFinder()
@@ -342,4 +347,61 @@ void QExplorerFinder::saveHistory(const QString& text)
     ui->lineEditSearch->addItems(history);
     ui->lineEditSearch->setEditText(text);
     ui->lineEditSearch->blockSignals(false);
+}
+
+void QExplorerFinder::onCheckExplorerWindow()
+{
+    if (m_targetPath.isEmpty()) return;
+
+    bool found = false;
+    HRESULT hr = CoInitialize(NULL);
+    if (SUCCEEDED(hr)) {
+        ComPtr<IShellWindows> spShellWindows;
+        if (SUCCEEDED(CoCreateInstance(CLSID_ShellWindows, NULL, CLSCTX_LOCAL_SERVER, IID_PPV_ARGS(&spShellWindows)))) {
+            long count = 0;
+            spShellWindows->get_Count(&count);
+
+            for (long i = 0; i < count; ++i) {
+                ComPtr<IDispatch> spDisp;
+                VARIANT vIndex;
+                VariantInit(&vIndex);
+                vIndex.vt = VT_I4;
+                vIndex.lVal = i;
+
+                if (SUCCEEDED(spShellWindows->Item(vIndex, &spDisp))) {
+                    ComPtr<IWebBrowser2> spBrowser;
+                    if (SUCCEEDED(spDisp.As(&spBrowser))) {
+                        ComPtr<Folder> spFolder;
+                        if (SUCCEEDED(GetFolderFromShellBrowser(spBrowser.Get(), &spFolder))) {
+                            ComPtr<Folder2> spFolder2;
+                            if (SUCCEEDED(spFolder.As(&spFolder2))) {
+                                ComPtr<FolderItem> spFolderSelf;
+                                if (SUCCEEDED(spFolder2->get_Self(&spFolderSelf))) {
+                                    BSTR bstrPath;
+                                    if (SUCCEEDED(spFolderSelf->get_Path(&bstrPath))) {
+                                        QString folderPath = QString::fromWCharArray(bstrPath);
+                                        SysFreeString(bstrPath);
+
+                                        folderPath.replace("/", "\\");
+                                        if (folderPath.length() > 3 && folderPath.endsWith("\\")) folderPath.chop(1);
+
+                                        if (folderPath.compare(m_targetPath, Qt::CaseInsensitive) == 0) {
+                                            found = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                VariantClear(&vIndex);
+                if (found) break;
+            }
+        }
+        CoUninitialize();
+    }
+
+    if (!found) {
+        close();
+    }
 }
