@@ -27,6 +27,9 @@
     <ClInclude Include="ContextMenu.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -46,5 +49,10 @@
     <ResourceCompile Include="SelectorExplorerPlugin.rc">
       <Filter>資源檔</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="app_icon.ico">
+      <Filter>資源檔</Filter>
+    </Image>
   </ItemGroup>
 </Project>
