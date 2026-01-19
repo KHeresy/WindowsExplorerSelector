@@ -35,9 +35,37 @@ $windeployqt = Join-Path $qtBinDir "windeployqt.exe"
 if (Test-Path $windeployqt) {
     Write-Host "Running windeployqt..." -ForegroundColor Cyan
     $exeInApp = Join-Path $appDir "ExplorerSelector.exe"
-    Start-Process $windeployqt -ArgumentList "--release --no-translations --compiler-runtime `"$exeInApp`"" -NoNewWindow -Wait
+    # Allow windeployqt to copy standard Qt translations to "translations" folder
+    Start-Process $windeployqt -ArgumentList "--release --compiler-runtime `"$exeInApp`"" -NoNewWindow -Wait
 } else {
     Write-Warning "windeployqt.exe not found at $qtBinDir. You may need to copy Qt DLLs manually."
+}
+
+# 4.1 Copy Application Translations
+# Copy our own translations to the same "translations" folder
+$i18nSrc = Join-Path $solutionDir "ExplorerSelector\i18n"
+$destTranslationsDir = Join-Path $appDir "translations"
+
+if (Test-Path $i18nSrc) {
+    # Ensure destination exists (windeployqt usually creates it, but to be safe)
+    if (-not (Test-Path $destTranslationsDir)) {
+        New-Item -ItemType Directory -Path $destTranslationsDir -Force | Out-Null
+    }
+    
+    # Copy app-specific translations
+    Copy-Item (Join-Path $i18nSrc "explorerselector_*.qm") $destTranslationsDir
+    Write-Host "Copied Application Translations to $destTranslationsDir" -ForegroundColor Green
+}
+
+# 4.2 Copy Qt Licenses (Best Effort)
+$qtRootDir = (Get-Item $qtBinDir).Parent.FullName
+$licenseFiles = @("LICENSE.txt", "LICENSE.GPL3-EXCEPT", "LICENSE.LGPLv3", "LICENSE.LGPL3", "LGPL_EXCEPTION.txt")
+foreach ($file in $licenseFiles) {
+    $srcPath = Join-Path $qtRootDir $file
+    if (Test-Path $srcPath) {
+        Copy-Item $srcPath $appDir
+        Write-Host "Copied Qt License: $file" -ForegroundColor Green
+    }
 }
 
 # 5. Copy Assets

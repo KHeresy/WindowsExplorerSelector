@@ -28,9 +28,9 @@ QExplorerFinder::QExplorerFinder(QWidget *parent)
     setWindowIcon(QIcon(":/QExplorerFinder/app_icon.png"));
 
     QSettings settings("ExplorerSelector", "ExplorerSelector");
-    ui->chkCloseAfterSelect->setChecked(settings.value("CloseAfterSelect", false).toBool());
+    ui->chkCloseAfterSelect->setChecked(settings.value("CloseAfterSelect", true).toBool());
     ui->chkAlwaysOnTop->setChecked(settings.value("AlwaysOnTop", false).toBool());
-    ui->chkDefaultSelectAll->setChecked(settings.value("DefaultSelectAll", false).toBool());
+    ui->chkDefaultSelectAll->setChecked(settings.value("DefaultSelectAll", true).toBool());
 
     connect(ui->lineEditSearch->lineEdit(), &QLineEdit::returnPressed, this, &QExplorerFinder::on_lineEditSearch_returnPressed);
     loadHistory();

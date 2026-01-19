@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>350</width>
-    <height>358</height>
+    <height>390</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <item>
        <widget class="QLabel" name="lblVersion">
         <property name="text">
-         <string>Version: 0.1.0</string>
+         <string>Explorer Selector 0.1.0</string>
         </property>
        </widget>
       </item>
@@ -34,6 +34,13 @@
         </property>
         <property name="openExternalLinks">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnAboutQt">
+        <property name="text">
+         <string>About Qt</string>
         </property>
        </widget>
       </item>

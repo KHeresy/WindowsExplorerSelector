@@ -38,8 +38,28 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 
     // Load Language
     ui->cmbLanguage->addItem(tr("System Default"), "");
-    ui->cmbLanguage->addItem("English", "en_US");
-    ui->cmbLanguage->addItem(tr("Traditional Chinese"), "zh_TW");
+    ui->cmbLanguage->addItem("English", "en_US"); // Source language
+
+    QDir translationsDir(QCoreApplication::applicationDirPath());
+    if (translationsDir.cd("translations")) {
+        QStringList fileNames = translationsDir.entryList(QStringList() << "explorerselector_*.qm", QDir::Files);
+        for (const QString &fileName : fileNames) {
+            // Extract locale from filename: explorerselector_zh_TW.qm -> zh_TW
+            QString localeStr = fileName.mid(17); // Length of "explorerselector_"
+            localeStr.chop(3); // Remove ".qm"
+
+            if (localeStr.compare("en_US", Qt::CaseInsensitive) == 0) continue; // Already added
+
+            QLocale locale(localeStr);
+            QString label = locale.nativeLanguageName();
+            if (label.isEmpty()) label = localeStr;
+            
+            // Capitalize first letter
+            if (!label.isEmpty()) label[0] = label[0].toUpper();
+
+            ui->cmbLanguage->addItem(label, localeStr);
+        }
+    }
 
     QString currentLang = settings.value("Language", "").toString();
     int index = ui->cmbLanguage->findData(currentLang);
@@ -60,6 +80,11 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     ui->lblProjectLink->setTextInteractionFlags(ui->lblProjectLink->textInteractionFlags() | Qt::LinksAccessibleByKeyboard | Qt::TextSelectableByKeyboard);
     QWidget::setTabOrder(ui->lblProjectLink, ui->keySequenceEdit);
     ui->lblProjectLink->setFocus();
+
+    // Connect About Qt button
+    connect(ui->btnAboutQt, &QPushButton::clicked, this, [this]() {
+        QMessageBox::aboutQt(this);
+    });
 
     // Make window non-resizable
     layout()->setSizeConstraint(QLayout::SetFixedSize);

@@ -11,6 +11,7 @@
 #include <QSettings>
 #include <QTranslator>
 #include <QLocale>
+#include <QLibraryInfo>
 
 #include <windows.h>
 #include <shlobj.h>
@@ -240,14 +241,33 @@ int main(int argc, char *argv[])
 
     QTranslator translator;
     bool loaded = false;
+    // Define the path to external translations
+    QString translationsPath = QCoreApplication::applicationDirPath() + "/translations";
+
     if (lang.isEmpty()) {
-        loaded = translator.load(QLocale::system(), "explorerselector", "_", ":/i18n");
+        loaded = translator.load(QLocale::system(), "explorerselector", "_", translationsPath);
     } else {
-        loaded = translator.load("explorerselector_" + lang, ":/i18n");
+        loaded = translator.load("explorerselector_" + lang, translationsPath);
     }
 
     if (loaded) {
         app.installTranslator(&translator);
+    }
+
+    // Load Qt standard translations (for dialogs like QColorDialog, QMessageBox, etc.)
+    QTranslator qtTranslator;
+    bool qtLoaded = false;
+    
+    // Qt translations usually follow "qt_<lang>.qm" pattern
+    if (lang.isEmpty()) {
+        // Try system locale
+        qtLoaded = qtTranslator.load(QLocale::system(), "qt", "_", translationsPath);
+    } else {
+        qtLoaded = qtTranslator.load("qt_" + lang, translationsPath);
+    }
+    
+    if (qtLoaded) {
+        app.installTranslator(&qtTranslator);
     }
 
     QString serverName = "ExplorerSelectorServer";
