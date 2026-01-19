@@ -90,17 +90,17 @@
         <translation type="vanished">Explorer Finder</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="307"/>
+        <location filename="../main.cpp" line="322"/>
         <source>Explorer Selector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="310"/>
+        <location filename="../main.cpp" line="325"/>
         <source>Settings...</source>
         <translation>設定...</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="327"/>
+        <location filename="../main.cpp" line="342"/>
         <source>Exit</source>
         <translation>離開</translation>
     </message>

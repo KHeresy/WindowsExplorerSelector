@@ -32,7 +32,22 @@ void openWindow(const QString& path) {
     window->setAttribute(Qt::WA_DeleteOnClose);
     window->setTargetPath(path);
     window->setWindowTitle(QObject::tr("Finding in: ") + path);
+    
+    // Always show the window first
     window->show();
+    
+    // Force window to foreground mechanism
+    HWND hwnd = (HWND)window->winId();
+    DWORD foregroundThread = GetWindowThreadProcessId(GetForegroundWindow(), NULL);
+    DWORD appThread = GetCurrentThreadId();
+
+    if (foregroundThread != appThread) {
+        AttachThreadInput(foregroundThread, appThread, TRUE);
+        SetForegroundWindow(hwnd);
+        SetFocus(hwnd);
+        AttachThreadInput(foregroundThread, appThread, FALSE);
+    }
+    
     window->raise();
     window->activateWindow();
 }
