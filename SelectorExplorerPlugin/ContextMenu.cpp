@@ -11,60 +11,39 @@ extern long g_cDllRef;
 
 HBITMAP IconToBitmapPARGB32(HICON hIcon) {
     if (!hIcon) return NULL;
+
     ICONINFO ii = {0};
     if (!GetIconInfo(hIcon, &ii)) return NULL;
-    
+
     BITMAP bm;
     GetObject(ii.hbmColor, sizeof(bm), &bm);
-    
+
     BITMAPINFO bi = {0};
     bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bi.bmiHeader.biWidth = bm.bmWidth;
-    bi.bmiHeader.biHeight = -bm.bmHeight; // Negative for top-down
+    bi.bmiHeader.biHeight = bm.bmHeight;
     bi.bmiHeader.biPlanes = 1;
     bi.bmiHeader.biBitCount = 32;
     bi.bmiHeader.biCompression = BI_RGB;
-    
+
     HDC hDC = GetDC(NULL);
     void* pBits = NULL;
     HBITMAP hBitmap = CreateDIBSection(hDC, &bi, DIB_RGB_COLORS, &pBits, NULL, 0);
-    
+
     if (hBitmap) {
         HDC hMemDC = CreateCompatibleDC(hDC);
         HBITMAP hOldBmp = (HBITMAP)SelectObject(hMemDC, hBitmap);
         
-        // Initialize alpha channel to 0
+        // Clear background to 0 (Transparent)
         memset(pBits, 0, bm.bmWidth * bm.bmHeight * 4);
-        
+
+        // Simple DrawIconEx
         DrawIconEx(hMemDC, 0, 0, hIcon, bm.bmWidth, bm.bmHeight, 0, NULL, DI_NORMAL);
         
-        // Fix Alpha using Mask
-        HDC hMaskDC = CreateCompatibleDC(hDC);
-        HBITMAP hOldMask = (HBITMAP)SelectObject(hMaskDC, ii.hbmMask);
-        
-        DWORD* pPixels = (DWORD*)pBits;
-        for (int y = 0; y < bm.bmHeight; y++) {
-            for (int x = 0; x < bm.bmWidth; x++) {
-                // Check Mask (0=Opaque, 1=Transparent)
-                // GetPixel returns non-zero for white (1), zero for black (0)
-                COLORREF maskColor = GetPixel(hMaskDC, x, y);
-                if (maskColor == 0) { // Opaque
-                    DWORD& pixel = pPixels[y * bm.bmWidth + x];
-                    // If alpha is 0, force it to 255 (Opaque)
-                    if ((pixel & 0xFF000000) == 0) {
-                        pixel |= 0xFF000000;
-                    }
-                }
-            }
-        }
-        
-        SelectObject(hMaskDC, hOldMask);
-        DeleteDC(hMaskDC);
-
         SelectObject(hMemDC, hOldBmp);
         DeleteDC(hMemDC);
     }
-    
+
     ReleaseDC(NULL, hDC);
     DeleteObject(ii.hbmColor);
     DeleteObject(ii.hbmMask);
@@ -163,7 +142,16 @@ IFACEMETHODIMP CContextMenu::QueryContextMenu(HMENU hMenu, UINT indexMenu, UINT 
     }
 
     // Load Icon
-    HICON hIcon = (HICON)LoadImageW(g_hInst, MAKEINTRESOURCEW(IDI_ICON1), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+    // Use system metrics for correct icon size (handles DPI scaling better)
+    int iconSizeX = GetSystemMetrics(SM_CXSMICON);
+    int iconSizeY = GetSystemMetrics(SM_CYSMICON);
+    
+    HICON hIcon = (HICON)LoadImageW(g_hInst, MAKEINTRESOURCEW(IDI_ICON1), IMAGE_ICON, iconSizeX, iconSizeY, LR_DEFAULTCOLOR);
+    // If exact size failed, try default size
+    if (!hIcon) {
+        hIcon = (HICON)LoadImageW(g_hInst, MAKEINTRESOURCEW(IDI_ICON1), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
+    }
+
     HBITMAP hBitmap = NULL;
     if (hIcon) {
         hBitmap = IconToBitmapPARGB32(hIcon);
