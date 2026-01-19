@@ -16,7 +16,7 @@ if (Test-Path $dllPath) {
 }
 
 # 2. Setup Certificate for Sparse Package
-$certName = "ExplorerFinderDev"
+$certName = "ExplorerSelectorDev"
 $certSubject = "CN=$certName"
 Write-Host "Checking for certificate..." -ForegroundColor Cyan
 
@@ -40,6 +40,14 @@ Write-Host "Registering Sparse Package..." -ForegroundColor Cyan
 $manifestPath = Join-Path $projectRoot "AppxManifest.xml"
 
 if (Test-Path $manifestPath) {
+    # Attempt to remove existing package first to clean up
+    $packageFamilyName = "ExplorerSelector.Package_bpf4c58yv7deg" # Calculated from Name + Publisher hash usually, but let's try finding by name
+    $pkg = Get-AppxPackage -Name "ExplorerSelector.Package"
+    if ($pkg) {
+        Write-Host "Removing existing package..." -ForegroundColor Yellow
+        Remove-AppxPackage $pkg.PackageFullName -ErrorAction SilentlyContinue
+    }
+
     Add-AppxPackage -Register $manifestPath -ForceApplicationShutdown
     Write-Host "Package Registered Successfully!" -ForegroundColor Green
     Write-Host "The context menu should now appear in the top-level Windows 11 menu."

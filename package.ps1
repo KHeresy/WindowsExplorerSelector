@@ -81,7 +81,7 @@ $manifestContent = Get-Content $manifestSrc -Raw
 $manifestContent = $manifestContent -replace 'Executable=".*\\ExplorerSelector.exe"', 'Executable="ExplorerSelector.exe"'
 $manifestContent = $manifestContent -replace 'Path=".*\\SelectorExplorerPlugin.dll"', 'Path="SelectorExplorerPlugin.dll"'
 
-Set-Content $manifestDst $manifestContent
+Set-Content $manifestDst $manifestContent -Encoding UTF8
 Write-Host "Updated AppxManifest.xml." -ForegroundColor Green
 
 # 7. Process Install.ps1
