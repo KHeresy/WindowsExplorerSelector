@@ -3,8 +3,6 @@
 #include "ContextMenu.h"
 #include <new>
 
-extern long g_cDllRef;
-
 CClassFactory::CClassFactory() : m_cRef(1)
 {
     InterlockedIncrement(&g_cDllRef);

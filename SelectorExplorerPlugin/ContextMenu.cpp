@@ -6,9 +6,6 @@
 #include <vector>
 #include <string>
 
-extern HINSTANCE g_hInst;
-extern long g_cDllRef;
-
 HBITMAP IconToBitmapPARGB32(HICON hIcon) {
     if (!hIcon) return NULL;
 
@@ -68,7 +65,6 @@ IFACEMETHODIMP CContextMenu::QueryInterface(REFIID riid, void** ppv)
     {
         QITABENT(CContextMenu, IShellExtInit),
         QITABENT(CContextMenu, IContextMenu),
-        QITABENT(CContextMenu, IExplorerCommand),
         { 0 },
     };
     return QISearch(this, qit, riid, ppv);
@@ -251,77 +247,4 @@ void CContextMenu::RunApp(const std::wstring& folderPath)
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
     }
-}
-
-// IExplorerCommand Implementation
-
-IFACEMETHODIMP CContextMenu::GetTitle(IShellItemArray* psiItemArray, LPWSTR* ppszName)
-{
-    wchar_t szMenuText[128];
-    if (0 == LoadStringW(g_hInst, IDS_MENU_TEXT, szMenuText, ARRAYSIZE(szMenuText))) {
-        wcscpy_s(szMenuText, L"Find Files");
-    }
-    return SHStrDupW(szMenuText, ppszName);
-}
-
-IFACEMETHODIMP CContextMenu::GetIcon(IShellItemArray* psiItemArray, LPWSTR* ppszIcon)
-{
-    // Returns "PathToDll,-IconID"
-    wchar_t szDllPath[MAX_PATH];
-    GetModuleFileNameW(g_hInst, szDllPath, MAX_PATH);
-    std::wstring iconPath = std::wstring(szDllPath) + L",-" + std::to_wstring(IDI_ICON1);
-    return SHStrDupW(iconPath.c_str(), ppszIcon);
-}
-
-IFACEMETHODIMP CContextMenu::GetToolTip(IShellItemArray* psiItemArray, LPWSTR* ppszInfotip)
-{
-    return E_NOTIMPL;
-}
-
-IFACEMETHODIMP CContextMenu::GetCanonicalName(GUID* pguidCommandName)
-{
-    *pguidCommandName = CLSID_ExplorerSelector;
-    return S_OK;
-}
-
-IFACEMETHODIMP CContextMenu::GetState(IShellItemArray* psiItemArray, BOOL fOkToBeSlow, EXPCMDSTATE* pCmdState)
-{
-    *pCmdState = ECS_ENABLED;
-    return S_OK;
-}
-
-IFACEMETHODIMP CContextMenu::Invoke(IShellItemArray* psiItemArray, IBindCtx* pbc)
-{
-    if (!psiItemArray) return E_INVALIDARG;
-
-    DWORD count = 0;
-    psiItemArray->GetCount(&count);
-    
-    if (count > 0)
-    {
-        IShellItem* psi = NULL;
-        if (SUCCEEDED(psiItemArray->GetItemAt(0, &psi)))
-        {
-            LPWSTR pszPath = NULL;
-            if (SUCCEEDED(psi->GetDisplayName(SIGDN_FILESYSPATH, &pszPath)))
-            {
-                RunApp(pszPath);
-                CoTaskMemFree(pszPath);
-            }
-            psi->Release();
-        }
-    }
-    return S_OK;
-}
-
-IFACEMETHODIMP CContextMenu::GetFlags(EXPCMDFLAGS* pFlags)
-{
-    *pFlags = ECF_DEFAULT;
-    return S_OK;
-}
-
-IFACEMETHODIMP CContextMenu::EnumSubCommands(IEnumExplorerCommand** ppEnum)
-{
-    *ppEnum = NULL;
-    return E_NOTIMPL;
 }

@@ -114,7 +114,6 @@ STDAPI DllUnregisterServer()
 
     // Unregister Shell Extension
     RegDeleteTreeW(HKEY_CLASSES_ROOT, L"Directory\\Background\\shellex\\ContextMenuHandlers\\ExplorerSelector");
-    RegDeleteTreeW(HKEY_CLASSES_ROOT, L"Directory\\Background\\shell\\ExplorerSelector");
 
     return S_OK;
 }
