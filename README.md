@@ -4,7 +4,9 @@
 > **⚠️ 警語：本專案之程式碼、文件與圖示完全由 Gemini-CLI 自動產生。**  
 > 使用者應自行評估安全風險，作者不保證程式碼的絕對正確性與安全性。
 
-這是一個強大的 Windows 檔案總管增強工具，提供即時搜尋並直接在原生檔案總管視窗中選取檔案的功能。
+這是一個 Windows 檔案總管增強工具，提供即時搜尋並直接在原生檔案總管視窗中選取檔案的功能。
+
+![app](images/ExplorerSelector.png)
 
 ## 功能特色
 
@@ -15,7 +17,6 @@
     *   預設 `Ctrl + F3`。在檔案總管視窗中按下，可立即開啟搜尋介面。
     *   快速鍵可於設定中自定義。
 *   **右鍵選單整合 (Shell Extension)**：
-    *   **完整支援 Windows 11**：可註冊至第一層右鍵選單（Modern Context Menu）。
     *   原生整合於檔案總管右鍵選單「尋找檔案」。
     *   使用純 Win32 API 實作 DLL 插件 (IExplorerCommand)，輕量且無負擔。
 *   **進階搜尋與選取**：
@@ -30,7 +31,7 @@
 
 ## 系統需求
 
-*   Windows 10 / 11 (64-bit)
+*   Windows 11 (64-bit)
 *   Visual Studio 2026 (用於編譯)
 *   Qt 6.10.1 (MSVC 2022 64-bit)
 
@@ -47,35 +48,7 @@
 3.  選擇 `Release` 設定，平台選擇 `x64`。
 4.  建置方案 (Build Solution)。
 
-## 打包與安裝 (推薦)
-
-為了方便部署與完整支援 Windows 11 右鍵選單，本專案提供了一鍵打包腳本。
-
-1.  **打包專案**：
-    以系統管理員身分執行 `package.ps1`：
-    ```powershell
-    .\package.ps1
-    ```
-    此腳本會將執行檔、DLL、Qt 依賴庫以及安裝腳本整理至專案根目錄下的 `App` 資料夾。
-
-2.  **安裝 (Windows 11 Modern Context Menu)**：
-    進入 `App` 資料夾，以**系統管理員身分**執行 `Install.ps1` :
-    ```powershell
-    cd App
-    .\Install.ps1
-    ```
-    此腳本會：
-    *   註冊 COM 元件 (SelectorExplorerPlugin.dll)。
-    *   建立並信任開發用憑證。
-    *   註冊 Sparse Package 以啟用 Windows 11 第一層右鍵選單。
-
-3.  **解除安裝**：
-    進入 `App` 資料夾，以**系統管理員身分**執行 `Uninstall.ps1`：
-    ```powershell
-    .\Uninstall.ps1
-    ```
-
-## 手動安裝 (僅舊版選單)
+## 手動安裝
 
 若不需要 Windows 11 第一層選單支援，可僅註冊 DLL：
 
