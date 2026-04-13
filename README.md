@@ -60,6 +60,8 @@
 2.  **執行主程式**：
     執行 `ExplorerSelector.exe` 後，會在系統匣看到圖示。
 
+您可能需要先安裝 Visual C++ v14 可轉發套件：https://aka.ms/vc14/vc_redist.x64.exe
+
 ## 注意事項
 
 *   **搜尋中的狀態**：搜尋時會在列表顯示 "Searching..." 並鎖定列表，搜尋完成後自動恢復。
