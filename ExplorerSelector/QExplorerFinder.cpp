@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <QKeyEvent>
+#include <QShortcut>
 #include <QTimer>
 #include <windows.h>
 #include <shlobj.h>
@@ -33,6 +34,12 @@ QExplorerFinder::QExplorerFinder(QWidget *parent)
     ui->chkDefaultSelectAll->setChecked(settings.value("DefaultSelectAll", true).toBool());
 
     connect(ui->lineEditSearch->lineEdit(), &QLineEdit::returnPressed, this, &QExplorerFinder::on_lineEditSearch_returnPressed);
+    auto* focusSearchShortcut = new QShortcut(QKeySequence(Qt::Key_F2), this);
+    focusSearchShortcut->setContext(Qt::WindowShortcut);
+    connect(focusSearchShortcut, &QShortcut::activated, this, [this]() {
+        ui->lineEditSearch->setFocus();
+        ui->lineEditSearch->lineEdit()->selectAll();
+    });
     loadHistory();
 
     m_checkTimer = new QTimer(this);

@@ -1,7 +1,7 @@
 # Windows Explorer Selector
 
 > [!CAUTION]
-> **⚠️ 警語：本專案之程式碼、文件與圖示完全由 Gemini-CLI 自動產生。**  
+> **⚠️ 警語：本專案之程式碼、文件與圖示由 Gemini 和 GPT 5.6 協助產生。**  
 > 使用者應自行評估安全風險，作者不保證程式碼的絕對正確性與安全性。
 
 這是一個 Windows 檔案總管增強工具，提供即時搜尋並直接在原生檔案總管視窗中選取檔案的功能。
@@ -13,12 +13,12 @@
 *   **常駐執行 (Resident Mode)**：
     *   程式啟動後會縮小至系統匣 (System Tray)。
     *   支援單一執行實體 (Single Instance)，透過具名管道 (Named Pipe) 進行高效處理。
-*   **全域快速鍵 (Global Hotkey)**：
-    *   預設 `Ctrl + F3`。在檔案總管視窗中按下，可立即開啟搜尋介面。
+*   **常駐搜尋與選取**：
+    *   主程式常駐於系統匣，預設按下 `Ctrl + F3` 即可針對目前開啟的檔案總管視窗搜尋與選取檔案。
     *   快速鍵可於設定中自定義。
-*   **右鍵選單整合 (Shell Extension)**：
-    *   原生整合於檔案總管右鍵選單「尋找檔案」。
-    *   使用純 Win32 API 實作 DLL 插件 (IExplorerCommand)，輕量且無負擔。
+*   **右鍵選單整合 (選用)**：
+    *   可選擇安裝 Shell Extension，將「尋找檔案」整合至檔案總管右鍵選單。
+    *   未安裝插件不影響主程式的常駐、快速鍵搜尋與檔案選取功能。
 *   **進階搜尋與選取**：
     *   **雙向連動**：點兩下搜尋結果即可在檔案總管中選取；點擊「在檔案總管選取」可批次選取所有選中項。
     *   **多選支持**：支援選取全部、反向選取、全部取消。
@@ -33,24 +33,24 @@
 
 *   Windows 11 (64-bit)
 *   Visual Studio 2026 (用於編譯)
-*   Qt 6.10.1 (MSVC 2022 64-bit)
+*   Qt 6.11.2 (MSVC 2022 64-bit)
 
 ## 專案結構
 
-*   **SelectorExplorerPlugin** (DLL): Windows Shell Extension，負責右鍵選單邏輯 (支援 IContextMenu 與 IExplorerCommand)。
-*   **ExplorerSelector** (EXE): Qt 6 應用程式，負責搜尋介面、全域快速鍵與檔案總管控制。
+*   **ExplorerSelector** (EXE): Qt 6 應用程式，負責常駐執行、搜尋介面、全域快速鍵與檔案總管控制；可獨立運作。
+*   **SelectorExplorerPlugin** (DLL，可選): Windows Shell Extension，提供檔案總管右鍵選單整合。
 *   **AppxManifest.xml** / **Install.ps1**: 用於 Windows 11 Sparse Package 註冊的設定與腳本。
 
 ## 編譯說明
 
-1.  確保已安裝 Visual Studio 2026 與 Qt 6.10.1 (並包含 Network 模組)。
+1.  確保已安裝 Visual Studio 2026 與 Qt 6.11.2 (並包含 Network 模組)。
 2.  開啟 `ExplorerSelector.slnx`。
 3.  選擇 `Release` 設定，平台選擇 `x64`。
 4.  建置方案 (Build Solution)。
 
-## 手動安裝
+## 手動安裝（選用）
 
-若不需要 Windows 11 第一層選單支援，可僅註冊 DLL：
+主程式不需要安裝或註冊插件即可運作。若要使用檔案總管右鍵選單或 Windows 11 第一層選單整合，才需要註冊 DLL：
 
 1.  **註冊右鍵選單**：
     以**系統管理員身分**執行：

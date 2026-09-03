@@ -1,7 +1,7 @@
 # Windows Explorer Selector
 
 > [!CAUTION]
-> **⚠️ Caution: The code, documentation, and icons in this project were generated entirely by Gemini-CLI.**  
+> **⚠️ Caution: The code, documentation, and icons in this project were generated with assistance from Gemini and GPT 5.6.**  
 > Users should assess the safety risks themselves; the author does not guarantee the absolute correctness or security of the code.
 
 This is a Windows Explorer enhancement tool that provides real-time search and file selection directly within the native Explorer window.
@@ -13,12 +13,12 @@ This is a Windows Explorer enhancement tool that provides real-time search and f
 *   **Resident Mode**:
     *   The program minimizes to the system tray after launch.
     *   Supports single instance handling via a named pipe for efficient processing.
-*   **Global Hotkey**:
-    *   Default: `Ctrl + F3`. Press in an Explorer window to open the search interface immediately.
+*   **Resident Search and Selection**:
+    *   The main program runs in the system tray. Press the default `Ctrl + F3` hotkey to search and select files in the currently open Explorer window.
     *   The hotkey can be customized in the settings.
-*   **Shell Extension Integration**:
-    *   Natively integrated into the Explorer context menu as "Find File".
-    *   Implemented using pure Win32 API for the DLL plugin (IExplorerCommand), lightweight and low overhead.
+*   **Shell Extension Integration (Optional)**:
+    *   Optionally install the Shell Extension to add "Find File" to the Explorer context menu.
+    *   The main program's resident mode, hotkey search, and file selection work without the plugin.
 *   **Advanced Search and Selection**:
     *   **Bidirectional Linking**: Double-click a search result to select it in Explorer; click "Select in Explorer" to batch select all highlighted items.
     *   **Multi-select Support**: Supports Select All, Invert Selection, and Clear All.
@@ -33,24 +33,24 @@ This is a Windows Explorer enhancement tool that provides real-time search and f
 
 *   Windows 11 (64-bit)
 *   Visual Studio 2026 (for compilation)
-*   Qt 6.10.1 (MSVC 2022 64-bit)
+*   Qt 6.11.2 (MSVC 2022 64-bit)
 
 ## Project Structure
 
-*   **SelectorExplorerPlugin** (DLL): Windows Shell Extension responsible for the context menu logic (supports IContextMenu and IExplorerCommand).
-*   **ExplorerSelector** (EXE): Qt 6 application responsible for the search interface, global hotkey, and Explorer control.
+*   **ExplorerSelector** (EXE): Qt 6 application responsible for resident mode, the search interface, global hotkey, and Explorer control; it works independently.
+*   **SelectorExplorerPlugin** (DLL, optional): Windows Shell Extension that provides Explorer context-menu integration.
 *   **AppxManifest.xml** / **package.ps1**: Configuration and scripts for Windows 11 Sparse Package registration and packaging.
 
 ## Build Instructions
 
-1.  Ensure Visual Studio 2026 and Qt 6.10.1 (with the Network module) are installed.
+1.  Ensure Visual Studio 2026 and Qt 6.11.2 (with the Network module) are installed.
 2.  Open `ExplorerSelector.slnx`.
 3.  Select the `Release` configuration and `x64` platform.
 4.  Build the solution.
 
-## Manual Installation
+## Manual Installation (Optional)
 
-If you do not need support for the Windows 11 first-level context menu, you can register only the DLL:
+The main program does not require the plugin to be installed or registered. Register the DLL only if you want Explorer context-menu or Windows 11 first-level menu integration:
 
 1.  **Register the context menu**:
     Run as **Administrator**:
