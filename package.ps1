@@ -85,7 +85,7 @@ if (-not $versionMatch.Success) {
     throw "Could not read four-part application version from Version.h."
 }
 $appVersion = $versionMatch.Groups[1].Value
-$manifestContent = $manifestContent -replace 'Version="[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"', "Version=\"$appVersion\""
+$manifestContent = $manifestContent -replace 'Version="[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"', "Version=`"$appVersion`""
 
 # Update paths: Remove "ExplorerSelector\x64\Debug\" prefix (if any)
 $manifestContent = $manifestContent -replace 'Executable=".*\\ExplorerSelector.exe"', 'Executable="ExplorerSelector.exe"'
