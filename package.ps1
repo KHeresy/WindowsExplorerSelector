@@ -3,7 +3,12 @@ $ErrorActionPreference = "Stop"
 
 $solutionDir = $PSScriptRoot
 $appDir = Join-Path $solutionDir "App"
-$qtBinDir = "C:\Qt\6.10.1\msvc2022_64\bin" # Adjust if needed
+$qtRootDir = $env:QT_ROOT_DIR
+if (-not $qtRootDir) {
+    throw "QT_ROOT_DIR is not set."
+}
+
+$qtBinDir = Join-Path $qtRootDir "bin"
 
 # 1. Clean/Create App Directory
 if (Test-Path $appDir) { Remove-Item $appDir -Recurse -Force }
@@ -17,12 +22,10 @@ $exePath = Join-Path $solutionDir "x64\Release\ExplorerSelector.exe"
 $dllPath = Join-Path $solutionDir "x64\Release\SelectorExplorerPlugin.dll"
 
 if (-not (Test-Path $exePath)) {
-    Write-Warning "Release build of ExplorerSelector.exe not found. Please build Release configuration first."
-    Exit
+    throw "Release build of ExplorerSelector.exe not found: $exePath"
 }
 if (-not (Test-Path $dllPath)) {
-    Write-Warning "Release build of SelectorExplorerPlugin.dll not found. Please build Release configuration first."
-    Exit
+    throw "Release build of SelectorExplorerPlugin.dll not found: $dllPath"
 }
 
 # 3. Copy Binaries
@@ -38,7 +41,7 @@ if (Test-Path $windeployqt) {
     # Allow windeployqt to copy standard Qt translations to "translations" folder
     Start-Process $windeployqt -ArgumentList "--release --compiler-runtime `"$exeInApp`"" -NoNewWindow -Wait
 } else {
-    Write-Warning "windeployqt.exe not found at $qtBinDir. You may need to copy Qt DLLs manually."
+    throw "windeployqt.exe not found: $windeployqt"
 }
 
 # 4.1 Copy Application Translations
