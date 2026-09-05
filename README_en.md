@@ -1,5 +1,7 @@
 # Windows Explorer Selector
 
+Version: 0.2.0
+
 > [!CAUTION]
 > **⚠️ Caution: The code, documentation, and icons in this project were generated with assistance from Gemini and GPT 5.6.**  
 > Users should assess the safety risks themselves; the author does not guarantee the absolute correctness or security of the code.
