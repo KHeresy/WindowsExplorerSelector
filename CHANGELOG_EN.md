@@ -5,7 +5,7 @@
 ### Added
 
 - Added the `F2` window shortcut to quickly focus the search field and select the current search text.
-- Added a GitHub Actions automated build workflow, including:
+- Added a GitHub Actions automated build workflow.
 - Added the LGPL license document `LICENSE`.
 - Added application and Shell Extension version information.
 

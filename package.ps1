@@ -79,6 +79,13 @@ Write-Host "Copied Assets." -ForegroundColor Green
 $manifestSrc = Join-Path $solutionDir "AppxManifest.xml"
 $manifestDst = Join-Path $appDir "AppxManifest.xml"
 $manifestContent = Get-Content $manifestSrc -Raw
+$versionHeader = Get-Content (Join-Path $solutionDir "Version.h") -Raw
+$versionMatch = [regex]::Match($versionHeader, '#define\s+EXPLORER_SELECTOR_VERSION_STRING_4\s+"([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)"')
+if (-not $versionMatch.Success) {
+    throw "Could not read four-part application version from Version.h."
+}
+$appVersion = $versionMatch.Groups[1].Value
+$manifestContent = $manifestContent -replace 'Version="[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"', "Version=\"$appVersion\""
 
 # Update paths: Remove "ExplorerSelector\x64\Debug\" prefix (if any)
 $manifestContent = $manifestContent -replace 'Executable=".*\\ExplorerSelector.exe"', 'Executable="ExplorerSelector.exe"'

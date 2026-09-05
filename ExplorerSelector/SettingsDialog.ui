@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>350</width>
-    <height>390</height>
+    <height>394</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <item>
        <widget class="QLabel" name="lblVersion">
         <property name="text">
-         <string>Explorer Selector 0.1.0</string>
+         <string>Explorer Selector %1</string>
         </property>
        </widget>
       </item>

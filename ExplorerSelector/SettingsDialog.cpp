@@ -1,4 +1,5 @@
 #include "SettingsDialog.h"
+#include "../Version.h"
 #include <QSettings>
 #include <QCoreApplication>
 #include <QDir>
@@ -15,6 +16,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     , ui(new Ui::SettingsDialog())
 {
     ui->setupUi(this);
+    ui->lblVersion->setText(tr("Explorer Selector %1").arg(QCoreApplication::applicationVersion()));
 
     QSettings settings("ExplorerSelector", "ExplorerSelector");
     

@@ -5,7 +5,7 @@
 ### Added
 
 - 新增 `F2` 視窗快捷鍵，可快速將焦點移至搜尋欄並全選目前搜尋文字。
-- 新增 GitHub Actions 自動化建置流程，包含：
+- 新增 GitHub Actions 自動化建置流程。
 - 新增 LGPL 授權文件 `LICENSE`。
 - 新增應用程式與 Shell Extension 的版本資訊。
 

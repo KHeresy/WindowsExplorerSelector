@@ -1,10 +1,11 @@
 #include <windows.h>
+#include "../Version.h"
 
 IDI_ICON1 ICON DISCARDABLE "app_icon.ico"
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION 0,2,0,0
-PRODUCTVERSION 0,2,0,0
+FILEVERSION EXPLORER_SELECTOR_VERSION_MAJOR,EXPLORER_SELECTOR_VERSION_MINOR,EXPLORER_SELECTOR_VERSION_PATCH,EXPLORER_SELECTOR_VERSION_BUILD
+PRODUCTVERSION EXPLORER_SELECTOR_VERSION_MAJOR,EXPLORER_SELECTOR_VERSION_MINOR,EXPLORER_SELECTOR_VERSION_PATCH,EXPLORER_SELECTOR_VERSION_BUILD
 FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
 FILEFLAGS 0x1L
@@ -21,12 +22,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Heresy"
             VALUE "FileDescription", "Explorer Selector"
-            VALUE "FileVersion", "0.2.0.0"
+            VALUE "FileVersion", EXPLORER_SELECTOR_VERSION_STRING_4
             VALUE "InternalName", "ExplorerSelector.exe"
             VALUE "LegalCopyright", "Copyright (C) 2026"
             VALUE "OriginalFilename", "ExplorerSelector.exe"
             VALUE "ProductName", "Explorer Selector"
-            VALUE "ProductVersion", "0.2.0.0"
+            VALUE "ProductVersion", EXPLORER_SELECTOR_VERSION_STRING_4
         END
     END
     BLOCK "VarFileInfo"

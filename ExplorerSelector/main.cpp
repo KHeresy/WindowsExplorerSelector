@@ -1,4 +1,5 @@
 #include "QExplorerFinder.h"
+#include "../Version.h"
 #include "SettingsDialog.h"
 #include <QtWidgets/QApplication>
 #include <QtNetwork/QLocalServer>
@@ -249,7 +250,7 @@ public:
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    app.setApplicationVersion("0.2.0");
+    app.setApplicationVersion(EXPLORER_SELECTOR_VERSION_STRING);
     app.setQuitOnLastWindowClosed(false);
 
     QSettings settings("ExplorerSelector", "ExplorerSelector");
